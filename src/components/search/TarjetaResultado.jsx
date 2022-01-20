@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { ButtonBase } from "@mui/material";
 import { CajaRolesResultado } from "./CajaRolesResultado";
-import capitalize from "../../utils/capitalize"
+import capitalize from "../../utils/capitalize";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
@@ -16,7 +16,7 @@ export default function TarjetaResultado({ usuarios }) {
   );
   const equipo = useSelector((state) => state.equipo);
   const usuario = useSelector((state) => state.usuario);
-  const [agregando, setAgregando] = useState(false)
+  const [agregando, setAgregando] = useState(false);
 
   const cantEquip = historialDeResultado.filter(
     (equipo) => equipo.activo === true
@@ -50,7 +50,7 @@ export default function TarjetaResultado({ usuarios }) {
     setAgregando(true);
     axios
       .put(
-        `http://143.198.238.253:3001/api/equipos/${equipo.id}/${usuarios.idPersona}`,
+        `http://localhost:3001/api/equipos/${equipo.id}/${usuarios.idPersona}`,
         {},
         {
           headers: {
@@ -81,12 +81,18 @@ export default function TarjetaResultado({ usuarios }) {
             <ButtonBase sx={{ width: 200, height: 200 }} id="ripple-avatar">
               <img
                 className="avatar"
-                src={!usuarios.imagen ? defaultAvatar : `${process.env.PUBLIC_URL}/uploads/perfil/${usuarios.imagen}`}  
+                src={
+                  !usuarios.imagen
+                    ? defaultAvatar
+                    : `${process.env.PUBLIC_URL}/uploads/perfil/${usuarios.imagen}`
+                }
                 alt="Avatar de Usuario"
               />
             </ButtonBase>
           </div>
-          <h1 className="nombre-usuario">{`${capitalize(usuarios.nombres)} ${capitalize(usuarios.apellidoPaterno)}`}</h1>
+          <h1 className="nombre-usuario">{`${capitalize(
+            usuarios.nombres
+          )} ${capitalize(usuarios.apellidoPaterno)}`}</h1>
           <div className="antiguedad-usuario">
             <span style={{ color: "#1976D2" }}> Profesión: </span>
             {usuarios.profesion}
@@ -115,15 +121,17 @@ export default function TarjetaResultado({ usuarios }) {
             justifyContent: "space-around",
           }}
         >
-          {!agregando ? 
-            <Button variant="contained" startIcon={<AddIcon />} onClick={addUser}>
+          {!agregando ? (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={addUser}
+            >
               AGREGAR
             </Button>
-            :
-            <Button variant="contained">
-              AGREGANDO...
-            </Button>
-          }
+          ) : (
+            <Button variant="contained">AGREGANDO...</Button>
+          )}
         </div>
       </div>
     </div>

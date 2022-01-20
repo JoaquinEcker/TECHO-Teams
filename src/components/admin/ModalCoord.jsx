@@ -40,10 +40,10 @@ export default function ModalCoord({
   };
 
   function HandleSubmit() {
-    if (area && !pais.id) return setPaisRequired(true)
+    if (area && !pais.id) return setPaisRequired(true);
     axios
       .put(
-        `http://143.198.238.253:3001/api/usuarios/setCoord/${usuarioSelec.idPersona}`,
+        `http://localhost:3001/api/usuarios/setCoord/${usuarioSelec.idPersona}`,
         {
           isCoordinador: isCoord,
           sedeIdCoord: sede.id,
@@ -57,11 +57,13 @@ export default function ModalCoord({
       .then(() => {
         setRows((rows) =>
           rows.map((row) => {
-            if (row.idPersona === usuarioSelec.idPersona)
-            
-             { 
-              paises.forEach(p => {if(p.id === pais.id) pais.nombre = p.nombre})
-              sedes.forEach(s =>{if(s.id === sede.id) sede.nombre = s.nombre}) 
+            if (row.idPersona === usuarioSelec.idPersona) {
+              paises.forEach((p) => {
+                if (p.id === pais.id) pais.nombre = p.nombre;
+              });
+              sedes.forEach((s) => {
+                if (s.id === sede.id) sede.nombre = s.nombre;
+              });
               return {
                 ...row,
                 isCoordinador: isCoord,
@@ -70,8 +72,8 @@ export default function ModalCoord({
                 paisIdCoord: pais.id,
                 areaCoord: area,
                 nombrePaisCoord: pais.nombre,
-              }}
-            else {
+              };
+            } else {
               return row;
             }
           })
@@ -84,15 +86,15 @@ export default function ModalCoord({
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/areas")
+      .get("http://localhost:3001/api/areas")
       .then((res) => setAreas(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
-    if (!pais.id) setArea(null)
+    if (!pais.id) setArea(null);
     axios
-      .get("http://143.198.238.253:3001/api/sedes")
+      .get("http://localhost:3001/api/sedes")
       .then((res) =>
         setSedes(res.data.filter((sedesPais) => sedesPais.id_pais === pais.id))
       )
@@ -111,13 +113,13 @@ export default function ModalCoord({
       nombre: usuarioSelec.nombreSedeCoord,
     });
   }, [
-    show, 
-    usuarioSelec.isCoordinador, 
-    usuarioSelec.areaCoord, 
-    usuarioSelec.paisIdCoord, 
+    show,
+    usuarioSelec.isCoordinador,
+    usuarioSelec.areaCoord,
+    usuarioSelec.paisIdCoord,
     usuarioSelec.nombrePaisCoord,
     usuarioSelec.sedeIdCoord,
-    usuarioSelec.nombreSedeCoord
+    usuarioSelec.nombreSedeCoord,
   ]);
 
   useEffect(() => {
@@ -134,7 +136,7 @@ export default function ModalCoord({
   return (
     <div>
       <Modal onClose={() => setShow(false)} open={show}>
-        <Grid sx={style} >
+        <Grid sx={style}>
           <Grid item>
             <FormControlLabel
               control={
@@ -148,10 +150,17 @@ export default function ModalCoord({
           </Grid>
 
           <Grid item>
-            {paisRequired ? <p style={{color: 'red', fontSize: '0.8em'}}>Necesitas especificar un país para el área.</p> : null}
+            {paisRequired ? (
+              <p style={{ color: "red", fontSize: "0.8em" }}>
+                Necesitas especificar un país para el área.
+              </p>
+            ) : null}
             <InputLabel id="">País</InputLabel>
             <Select
-              onChange={(e) => {setPais({ id: e.target.value, nombre: null }); setPaisRequired(false)}}
+              onChange={(e) => {
+                setPais({ id: e.target.value, nombre: null });
+                setPaisRequired(false);
+              }}
               value={pais.id}
               sx={{ minWidth: "15rem" }}
               disabled={disabled}
@@ -187,7 +196,7 @@ export default function ModalCoord({
               onChange={(e) => setArea(e.target.value)}
               defaultValue={usuarioSelec.areaCoord}
               value={area}
-              disabled={(disabled)}
+              disabled={disabled}
               sx={{ minWidth: "15rem" }}
             >
               {areas.map((Area) => (

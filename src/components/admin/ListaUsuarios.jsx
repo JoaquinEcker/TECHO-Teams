@@ -1,29 +1,26 @@
 import * as React from "react";
-import {
-  DataGrid,
-  GridActionsCellItem,
-} from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import axios from "axios";
-import { ModalToggleAdmin } from "./ModalToggleAdmin"
+import { ModalToggleAdmin } from "./ModalToggleAdmin";
 import { useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import ModalCoord from "./ModalCoord";
-import {changeIdToName} from './changeIdToName';
-import loading from './loadingRows';
+import { changeIdToName } from "./changeIdToName";
+import loading from "./loadingRows";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import SecurityIcon from "@mui/icons-material/Security";
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 const pageSize = 5;
 
 export default function ListaUsuarios({ setRows, rows }) {
   const [page, setPage] = React.useState(0);
   const usuario = useSelector((state) => state.usuario);
   const [showMakeAdmin, setShowMakeAdmin] = React.useState(false);
-  const [usuarioSelec, setUsuarioSelec]= React.useState({});
+  const [usuarioSelec, setUsuarioSelec] = React.useState({});
   const [paises, setPaises] = React.useState([]);
   const [sedes, setSedes] = React.useState([]);
   const [show, setShow] = React.useState(false);
@@ -39,8 +36,8 @@ export default function ListaUsuarios({ setRows, rows }) {
 
   const toggleAdmin = React.useCallback(
     (usuario) => () => {
-      setUsuarioSelec(usuario)
-      setShowMakeAdmin(true)
+      setUsuarioSelec(usuario);
+      setShowMakeAdmin(true);
     },
     []
   );
@@ -55,7 +52,7 @@ export default function ListaUsuarios({ setRows, rows }) {
     () => [
       {
         field: "acciones",
-        headerName:"Opciones",
+        headerName: "Opciones",
         type: "actions",
         width: 120,
         getActions: (params) => [
@@ -75,11 +72,31 @@ export default function ListaUsuarios({ setRows, rows }) {
       },
       { field: "nombres", type: "string", width: 200 },
       { field: "mail", type: "email", width: 300 },
-      { field: "isAdmin",headerName:"Admin", type: "boolean", width: 120 },
-      { field: "isCoordinador", headerName: "Coordinador", type: "boolean", width: 120 },
-      { field: "areaCoord", headerName:"Área de Coordinación",type: "string", width: 120 },
-      { field: "nombrePaisCoord",headerName:"País de Coordinación", type: "string", width: 120 },
-      { field: "nombreSedeCoord",headerName:"Sede de Coordinación", type: "string", width: 120 }
+      { field: "isAdmin", headerName: "Admin", type: "boolean", width: 120 },
+      {
+        field: "isCoordinador",
+        headerName: "Coordinador",
+        type: "boolean",
+        width: 120,
+      },
+      {
+        field: "areaCoord",
+        headerName: "Área de Coordinación",
+        type: "string",
+        width: 120,
+      },
+      {
+        field: "nombrePaisCoord",
+        headerName: "País de Coordinación",
+        type: "string",
+        width: 120,
+      },
+      {
+        field: "nombreSedeCoord",
+        headerName: "Sede de Coordinación",
+        type: "string",
+        width: 120,
+      },
     ],
     [toggleCoord, toggleAdmin]
   );
@@ -87,7 +104,7 @@ export default function ListaUsuarios({ setRows, rows }) {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-  
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -97,20 +114,24 @@ export default function ListaUsuarios({ setRows, rows }) {
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/regiones/paises")
+      .get("http://localhost:3001/api/regiones/paises")
       .then((res) => {
         setPaises(res.data);
         return res.data;
       })
       .then((paises) => {
         axios
-          .get("http://143.198.238.253:3001/api/usuarios", {
-            headers: { authorization: usuario.token, offset: page * pageSize, limit: page * pageSize + pageSize  },
+          .get("http://localhost:3001/api/usuarios", {
+            headers: {
+              authorization: usuario.token,
+              offset: page * pageSize,
+              limit: page * pageSize + pageSize,
+            },
           })
           .then((res) => res.data)
           .then(async (users) => {
-            await changeIdToName(users, paises)
-            setRows(users)
+            await changeIdToName(users, paises);
+            setRows(users);
           })
           .catch((err) => console.error(err));
       })
@@ -118,7 +139,9 @@ export default function ListaUsuarios({ setRows, rows }) {
   }, [page, setRows, usuario.token]);
 
   return (
-    <div style={{display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
       <DataGrid
         columns={columns}
         rows={rows}
@@ -126,14 +149,20 @@ export default function ListaUsuarios({ setRows, rows }) {
         autoHeight={true}
         hideFooter
         pagesize={pageSize}
-        sx={{width: "100%"}}
+        sx={{ width: "100%" }}
       />
-      <div style={{marginTop:"40px"}}>
-        <Button onClick={() => pageChange(page - 1)}><ChevronLeftIcon />anterior</Button>
-        {" página "+(page+1)}
-        <Button onClick={() => pageChange(page + 1)}>siguiente<ChevronRightIcon /></Button>
+      <div style={{ marginTop: "40px" }}>
+        <Button onClick={() => pageChange(page - 1)}>
+          <ChevronLeftIcon />
+          anterior
+        </Button>
+        {" página " + (page + 1)}
+        <Button onClick={() => pageChange(page + 1)}>
+          siguiente
+          <ChevronRightIcon />
+        </Button>
       </div>
-     
+
       <ModalCoord
         setOpen={setOpen}
         setRows={setRows}
@@ -145,25 +174,18 @@ export default function ListaUsuarios({ setRows, rows }) {
         sedes={sedes}
         setSedes={setSedes}
       />
-      <ModalToggleAdmin 
-        setShow={setShowMakeAdmin} 
-        show={showMakeAdmin} 
-        usuarioSelec={usuarioSelec} 
-        rows={rows} 
+      <ModalToggleAdmin
+        setShow={setShowMakeAdmin}
+        show={showMakeAdmin}
+        usuarioSelec={usuarioSelec}
+        rows={rows}
         setRows={setRows}
-      /> 
+      />
 
-      <Snackbar 
-        open={open} 
-        autoHideDuration={4000} 
-        onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              autoridades de coordinador actualizadas
-            </Alert>
+      <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          autoridades de coordinador actualizadas
+        </Alert>
       </Snackbar>
     </div>
   );

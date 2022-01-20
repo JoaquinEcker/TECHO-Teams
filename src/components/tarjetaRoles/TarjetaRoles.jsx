@@ -16,13 +16,21 @@ import getToken from "../../utils/getToken";
 import swal from "sweetalert";
 import "./TarjetaRoles.css";
 import axios from "axios";
-import capitalize from "../../utils/capitalize"
+import capitalize from "../../utils/capitalize";
 
-export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, setCantMiembros, isAdminOrCoord }) => {
+export const TarjetaRoles = ({
+  data,
+  id,
+  opcPersns = [],
+  opcRoles = [],
+  state,
+  setCantMiembros,
+  isAdminOrCoord,
+}) => {
   const dispatch = useDispatch();
   const { form, handleChange } = useForm({
     idEquipo: id,
-    rol: { nombre: data.role?.nombre, id: data.role?.id},
+    rol: { nombre: data.role?.nombre, id: data.role?.id },
     user: { id: data.usuarioIdPersona },
   });
   const yo = useSelector(({ usuario }) => usuario);
@@ -31,18 +39,23 @@ export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, s
 
   const guardarEditado = async () => {
     if (!form.rol) return;
-    if (form.rol?.id === 1 && !data.usuario.isCoordinador && !data.usuario.isAdmin) return setError(true)
+    if (
+      form.rol?.id === 1 &&
+      !data.usuario.isCoordinador &&
+      !data.usuario.isAdmin
+    )
+      return setError(true);
 
     setEditMode(!editMode);
-    if (form.rol.id && form.user.id && form.idEquipo) await axios({
-      method: "put",
-      url: `http://143.198.238.253:3001/api/equipos/${form.idEquipo}/${form.user.id}/${form.rol.id}`,
-      headers: {
-        idpersona: yo.idPersona,
-        authorization: getToken(),
-      },
-    })
-      .catch((err) => console.log({ err }));
+    if (form.rol.id && form.user.id && form.idEquipo)
+      await axios({
+        method: "put",
+        url: `http://localhost:3001/api/equipos/${form.idEquipo}/${form.user.id}/${form.rol.id}`,
+        headers: {
+          idpersona: yo.idPersona,
+          authorization: getToken(),
+        },
+      }).catch((err) => console.log({ err }));
     dispatch(infoRolesEquipo(form.idEquipo));
   };
   const borrar = () => {
@@ -52,21 +65,22 @@ export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, s
       icon: "warning",
       buttons: ["Cancelar", "Ok"],
       dangerMode: true,
-    })
-    .then((willDelete) => {
+    }).then((willDelete) => {
       if (willDelete) {
-        setCantMiembros((miembros) => miembros - 1 )
-        dispatch(setRol(state.filter(e => e.usuarioIdPersona !== data.usuarioIdPersona)))
+        setCantMiembros((miembros) => miembros - 1);
+        dispatch(
+          setRol(
+            state.filter((e) => e.usuarioIdPersona !== data.usuarioIdPersona)
+          )
+        );
         axios({
           method: "delete",
-          url: `http://143.198.238.253:3001/api/equipos/${form.idEquipo}/${form.user?.id}`,
+          url: `http://localhost:3001/api/equipos/${form.idEquipo}/${form.user?.id}`,
           headers: { idpersona: yo.idPersona, authorization: getToken() },
-        })
-          .catch((err) => console.log({ err }));
+        }).catch((err) => console.log({ err }));
       }
       setEditMode(!editMode);
-    })
-
+    });
   };
 
   return (
@@ -77,7 +91,11 @@ export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, s
             <ButtonBase sx={{ width: 200, height: 200 }} id="ripple-avatar">
               <img
                 className="avatar"
-                src={data?.imagenUsr ? `${process.env.PUBLIC_URL}/uploads/perfil/${data?.imagenUsr}` : defaultAvatar}
+                src={
+                  data?.imagenUsr
+                    ? `${process.env.PUBLIC_URL}/uploads/perfil/${data?.imagenUsr}`
+                    : defaultAvatar
+                }
                 alt="Avatar de Usuario"
               />
             </ButtonBase>
@@ -86,7 +104,11 @@ export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, s
           <ButtonBase sx={{ width: 200, height: 200 }} id="ripple-avatar">
             <img
               className="avatar"
-              src={data?.imagenUsr ? `${process.env.PUBLIC_URL}/uploads/perfil/${data?.imagenUsr}` : defaultAvatar}
+              src={
+                data?.imagenUsr
+                  ? `${process.env.PUBLIC_URL}/uploads/perfil/${data?.imagenUsr}`
+                  : defaultAvatar
+              }
               alt="Avatar de Usuario"
             />
           </ButtonBase>
@@ -94,7 +116,14 @@ export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, s
       </div>
       {editMode ? (
         <div className="rol-opciones">
-          {error ? (<p style={{ color: 'red', fontSize: '0.8em' }}>El usuario no puede ser coordinador, {yo.isAdmin ? 'necesitas darle autoridad en la sección AdminLand.': 'consulte a un admin para darle autoridad.'}</p>) : null}
+          {error ? (
+            <p style={{ color: "red", fontSize: "0.8em" }}>
+              El usuario no puede ser coordinador,{" "}
+              {yo.isAdmin
+                ? "necesitas darle autoridad en la sección AdminLand."
+                : "consulte a un admin para darle autoridad."}
+            </p>
+          ) : null}
           <FormControl id="modificar-rol" variant="standard">
             <Autocompletar
               opciones={opcRoles}
@@ -130,7 +159,7 @@ export const TarjetaRoles = ({ data, id, opcPersns = [], opcRoles = [], state, s
           </ButtonBase>
         </div>
       ) : (
-         isAdminOrCoord && (
+        isAdminOrCoord && (
           <div className="rol-icons">
             <ButtonBase onClick={() => setEditMode(!editMode)} id="item-icon">
               <ModeEditOutlineIcon color="action" />

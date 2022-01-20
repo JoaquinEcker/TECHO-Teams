@@ -8,8 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 import { CustomHook } from "../../hooks/CustomHook";
 import { useValidation } from "../../hooks/useValidation";
@@ -115,7 +114,7 @@ function MiInformación() {
   const dispatch = useDispatch();
   const usuario = useSelector((state) => state.usuario);
   const navigate = useNavigate();
-  const [actualizar, setActualizar] = useState(false)
+  const [actualizar, setActualizar] = useState(false);
   //estados para regiones
   const [paises, setPaises] = useState([]);
   const [provincias, setProvincias] = useState([]);
@@ -169,26 +168,27 @@ function MiInformación() {
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/regiones/paises")
+      .get("http://localhost:3001/api/regiones/paises")
       .then((res) => setPaises(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
     axios
-      .get(`http://143.198.238.253:3001/api/regiones/paises/${pais.value}/provincias`)
+      .get(`http://localhost:3001/api/regiones/paises/${pais.value}/provincias`)
       .then((res) => setProvincias(res.data))
       .catch((err) => console.log(err));
   }, [pais.value]);
 
   useEffect(() => {
-    (pais.value && provincia.value) &&
-    axios
-      .get(
-        `http://143.198.238.253:3001/api/regiones/paises/${pais.value}/provincias/${provincia.value}/localidades`
-      )
-      .then((res) => setLocalidades(res.data))
-      .catch((err) => console.log(err));
+    pais.value &&
+      provincia.value &&
+      axios
+        .get(
+          `http://localhost:3001/api/regiones/paises/${pais.value}/provincias/${provincia.value}/localidades`
+        )
+        .then((res) => setLocalidades(res.data))
+        .catch((err) => console.log(err));
   }, [pais.value, provincia.value]);
 
   const theme = useTheme();
@@ -200,41 +200,41 @@ function MiInformación() {
     setIntereses(value);
   };
 
-  const handleImagenPerfil = e => {
+  const handleImagenPerfil = (e) => {
     e.preventDefault();
-    setImagenPerfil(e.target.files[0])
+    setImagenPerfil(e.target.files[0]);
   };
- 
 
-  //FormData.set() transforma en string los integer y booleans, 
+  //FormData.set() transforma en string los integer y booleans,
   //por lo que en el back se convierten a su tipo original
-  const data = new FormData()
-  for(let campo in form) {
-    data.append(`${campo}`, form[campo])
+  const data = new FormData();
+  for (let campo in form) {
+    data.append(`${campo}`, form[campo]);
   }
-  data.set("idPais", pais.value)
-  data.set("idProvincia", provincia.value)
-  data.set("idLocalidad", localidad.value)
-  data.set("estudios", estudios.value)
-  data.set("intereses", JSON.stringify(intereses))
-  data.set("acepta_marketing", recibirMails)
-  data.set("recibirMails", recibirMails)
+  data.set("idPais", pais.value);
+  data.set("idProvincia", provincia.value);
+  data.set("idLocalidad", localidad.value);
+  data.set("estudios", estudios.value);
+  data.set("intereses", JSON.stringify(intereses));
+  data.set("acepta_marketing", recibirMails);
+  data.set("recibirMails", recibirMails);
 
-  data.set("apellidoMaterno", apellidoMaterno.value)
-  data.set("telefono", "0")
-  data.set("sexo", genero)
-  data.set("idUnidadOrganizacional", 0)
+  data.set("apellidoMaterno", apellidoMaterno.value);
+  data.set("telefono", "0");
+  data.set("sexo", genero);
+  data.set("idUnidadOrganizacional", 0);
 
   const handleSubmit = (e) => {
-    setActualizar(true)
+    setActualizar(true);
     e.preventDefault();
-    if(imagenPerfil.name) data.set("fotoDePerfil", imagenPerfil, imagenPerfil.name)
+    if (imagenPerfil.name)
+      data.set("fotoDePerfil", imagenPerfil, imagenPerfil.name);
     for (var value of data.values()) {
       console.log(value);
-   }
+    }
     axios
       .put(
-        `http://143.198.238.253:3001/api/usuarios/editarUsuario/${usuario.idPersona}`, 
+        `http://localhost:3001/api/usuarios/editarUsuario/${usuario.idPersona}`,
         data,
         {
           headers: {
@@ -244,17 +244,16 @@ function MiInformación() {
       )
       .then((res) => setUsuario(res.data))
       .then(() => {
-        setActualizar(false)
+        setActualizar(false);
         swal({
           title: "Perfil editado",
           icon: "success",
           timer: "2000",
-        })
-      }
-      )
+        });
+      })
       .catch((err) => {
-        setActualizar(false)
-        console.log(err)
+        setActualizar(false);
+        console.log(err);
       });
   };
 
@@ -482,13 +481,19 @@ function MiInformación() {
               id="fotoDePerfil"
               type="file"
               name="fotoDePerfil"
-              onChange={handleImagenPerfil}        
-                style={{ display: 'none' }} 
+              onChange={handleImagenPerfil}
+              style={{ display: "none" }}
             />
-             <Button style={{height:"35%"}} id="ingresar" startIcon={<AddPhotoAlternateIcon />}variant="contained" component="span">
-             Subir
-           </Button>
-           {imagenPerfil? imagenPerfil.name : null}
+            <Button
+              style={{ height: "35%" }}
+              id="ingresar"
+              startIcon={<AddPhotoAlternateIcon />}
+              variant="contained"
+              component="span"
+            >
+              Subir
+            </Button>
+            {imagenPerfil ? imagenPerfil.name : null}
           </label>
         </div>
 
@@ -507,12 +512,20 @@ function MiInformación() {
             VOLVER
           </Button>
 
-          {!actualizar ? <Button id="ingresar" size="medium" variant="outlined" type="submit">
-            GUARDAR
-          </Button> :
-          <Button id="ingresar" size="medium" variant="outlined">
-          EDITANDO
-        </Button>}
+          {!actualizar ? (
+            <Button
+              id="ingresar"
+              size="medium"
+              variant="outlined"
+              type="submit"
+            >
+              GUARDAR
+            </Button>
+          ) : (
+            <Button id="ingresar" size="medium" variant="outlined">
+              EDITANDO
+            </Button>
+          )}
         </div>
       </form>
     </div>

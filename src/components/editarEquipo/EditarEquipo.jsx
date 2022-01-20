@@ -8,14 +8,14 @@ import swal from "sweetalert";
 import getToken from "../../utils/getToken";
 import { useDispatch, useSelector } from "react-redux";
 import { updateEquipo } from "../../state/equipo";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 export default function EditarEquipo() {
   const usuario = useSelector((state) => state.usuario);
   const dispatch = useDispatch();
   const equipo = useSelector((state) => state.equipo);
   const navigate = useNavigate();
-  const [imagenEquipo, setImagenEquipo] = useState({})
+  const [imagenEquipo, setImagenEquipo] = useState({});
   const [paises, setPaises] = useState([]);
   const pais = CustomHook(equipo.paisId);
   const nombre = CustomHook(equipo.nombre);
@@ -31,14 +31,14 @@ export default function EditarEquipo() {
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/regiones/paises")
+      .get("http://localhost:3001/api/regiones/paises")
       .then((res) => setPaises(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/sedes")
+      .get("http://localhost:3001/api/sedes")
       .then((res) =>
         setSedes(
           res.data.filter(
@@ -52,7 +52,7 @@ export default function EditarEquipo() {
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/comunidades", {
+      .get("http://localhost:3001/api/comunidades", {
         headers: { authorization: getToken(), pais: pais.value },
       })
       .then((res) => {
@@ -63,7 +63,7 @@ export default function EditarEquipo() {
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/areas")
+      .get("http://localhost:3001/api/areas")
       .then((res) => setArea(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -98,23 +98,22 @@ export default function EditarEquipo() {
       timer: "5000",
     });
   };
-  
-  const data = new FormData()
-  data.set("nombre", nombre.value)
-  data.set("cantMiembros", cantidad.value)
-  data.set("activo", equipo.activo)
-  data.set("detalles", descripcion.value)
-  data.set("paisId", pais.value)
-  data.set("sedeId", sede.value ? sede.value : 0)
-  data.set("territorioId", categoria === "Territorio" ? comunidad.value : null)
-  data.set("categoria", categoria)
-  data.set("area", areas.value)
 
+  const data = new FormData();
+  data.set("nombre", nombre.value);
+  data.set("cantMiembros", cantidad.value);
+  data.set("activo", equipo.activo);
+  data.set("detalles", descripcion.value);
+  data.set("paisId", pais.value);
+  data.set("sedeId", sede.value ? sede.value : 0);
+  data.set("territorioId", categoria === "Territorio" ? comunidad.value : null);
+  data.set("categoria", categoria);
+  data.set("area", areas.value);
 
   const handleImagen = (e) => {
     e.preventDefault();
-    setImagenEquipo(e.target.files[0])
-  }
+    setImagenEquipo(e.target.files[0]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -123,8 +122,9 @@ export default function EditarEquipo() {
       errorAlert("Error!", "Complete todos los campos requeridos");
     if (!parseInt(cantidad.value))
       errorAlert("Error!", "Complete correctamente la cantidad de miembros");
-    else{
-    if(imagenEquipo.name) data.set("fotoDeEquipo", imagenEquipo, imagenEquipo.name)
+    else {
+      if (imagenEquipo.name)
+        data.set("fotoDeEquipo", imagenEquipo, imagenEquipo.name);
       dispatch(
         updateEquipo({
           id: equipo.id,
@@ -136,19 +136,14 @@ export default function EditarEquipo() {
         .then(successAlert())
         .then(() => navigate(-1))
         .catch((err) => console.log({ err }));
-      }
+    }
   };
- 
-
 
   const onKeyPress = (e) => {
-   
     let value = e.target.value;
     if (isNaN(+value)) {
       errorAlert("Error!", "ingrese solo numeros");
-      
     }
-
   };
   return (
     <div>
@@ -193,14 +188,14 @@ export default function EditarEquipo() {
             </label>
             <label htmlFor="selector" className="label">
               <p>PAÍS</p>
-              <select 
+              <select
                 value={pais.value}
-                onChange={(e)=> {
-                  pais.onChange(e)
-                  sede.setValue(null)
-                }} 
-                className="form-select" 
-                >
+                onChange={(e) => {
+                  pais.onChange(e);
+                  sede.setValue(null);
+                }}
+                className="form-select"
+              >
                 {paises.map((pais) => (
                   <option key={pais.id} value={pais.id}>
                     {pais.nombre}
@@ -275,23 +270,25 @@ export default function EditarEquipo() {
             </label>
 
             <label htmlFor="fotoDeEquipo" className="label">
-            <p>IMAGEN DE EQUIPO</p>
-            <input
-              style={{ display: 'none' }} 
-              accept="image/*"
-              id="fotoDeEquipo"
-              type="file"
-              name="fotoDeEquipo"
-              onChange={handleImagen}
-            />
-            <Button id="ingresar" startIcon={<AddPhotoAlternateIcon />}variant="contained" component="span">
-             
-             
-             Subir
-           </Button>
-           {imagenEquipo? imagenEquipo.name : null}
-          
-          </label>
+              <p>IMAGEN DE EQUIPO</p>
+              <input
+                style={{ display: "none" }}
+                accept="image/*"
+                id="fotoDeEquipo"
+                type="file"
+                name="fotoDeEquipo"
+                onChange={handleImagen}
+              />
+              <Button
+                id="ingresar"
+                startIcon={<AddPhotoAlternateIcon />}
+                variant="contained"
+                component="span"
+              >
+                Subir
+              </Button>
+              {imagenEquipo ? imagenEquipo.name : null}
+            </label>
           </div>
           <div
             style={{

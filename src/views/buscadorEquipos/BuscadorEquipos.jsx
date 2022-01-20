@@ -33,8 +33,8 @@ const BuscadorEquipos = () => {
 
   useEffect(() => {
     const pedidos = [
-      axios.get("http://143.198.238.253:3001/api/regiones/paises"),
-      axios.get("http://143.198.238.253:3001/api/areas"),
+      axios.get("http://localhost:3001/api/regiones/paises"),
+      axios.get("http://localhost:3001/api/areas"),
     ];
     Promise.all(pedidos)
       .then((resp) => {
@@ -46,7 +46,7 @@ const BuscadorEquipos = () => {
 
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/sedes")
+      .get("http://localhost:3001/api/sedes")
       .then((res) =>
         setSedes(
           res.data.filter(
@@ -71,11 +71,11 @@ const BuscadorEquipos = () => {
       case "Nombre":
         valor = nombre.value;
         break;
-      default: ;
+      default:
     }
     axios
       .get(
-        `http://143.198.238.253:3001/api/equipos/?filtro=${filtro.value}&valor=${valor}&pais=${pais.value}`
+        `http://localhost:3001/api/equipos/?filtro=${filtro.value}&valor=${valor}&pais=${pais.value}`
       )
       .then((res) => {
         setEquipos(res.data);
@@ -151,38 +151,38 @@ const BuscadorEquipos = () => {
             )}
             {filtro.value === "Area" && (
               <>
-              <TextField
-                select
-                label="Area"
-                size="small"
-                type="text"
-                style={{ width: "20%" }}
-                name="areas"
-                {...area}
-              >
-                {areas.map((area) => (
-                  <MenuItem key={area.id} value={area.nombre}>
-                    {area.nombre}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <TextField
-              select
-              label="Pais"
-              size="small"
-              type="text"
-              style={{ width: "20%" }}
-              name="paises"
-              required
-              {...pais}
-            >
-              {paises.map((pais) => (
-                <MenuItem key={pais.id} value={pais.id}>
-                  {pais.nombre}
-                </MenuItem>
-              ))}
-            </TextField>
-            </>
+                <TextField
+                  select
+                  label="Area"
+                  size="small"
+                  type="text"
+                  style={{ width: "20%" }}
+                  name="areas"
+                  {...area}
+                >
+                  {areas.map((area) => (
+                    <MenuItem key={area.id} value={area.nombre}>
+                      {area.nombre}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Pais"
+                  size="small"
+                  type="text"
+                  style={{ width: "20%" }}
+                  name="paises"
+                  required
+                  {...pais}
+                >
+                  {paises.map((pais) => (
+                    <MenuItem key={pais.id} value={pais.id}>
+                      {pais.nombre}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </>
             )}
             {filtro.value === "Nombre" && (
               <TextField

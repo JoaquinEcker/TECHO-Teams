@@ -6,15 +6,15 @@ import { CardActionArea } from "@mui/material";
 import CircleIcon from "@mui/icons-material/Circle";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 const EquipoCard = ({ equipo }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [miembros, setMiembros] = useState(0);
 
   useEffect(() => {
     axios
-      .get(`http://143.198.238.253:3001/api/equipos/cantMiembros/${equipo.id}`)
+      .get(`http://localhost:3001/api/equipos/cantMiembros/${equipo.id}`)
       .then((res) => setMiembros(res.data.length))
       .catch((err) => console.log(err));
   }, [equipo.id]);
@@ -37,7 +37,9 @@ const EquipoCard = ({ equipo }) => {
         >
           <span>
             {`${equipo.nombre} `}
-            <Tooltip title={equipo.activo ? "Equipo activo" : "Equipo inactivo"}>
+            <Tooltip
+              title={equipo.activo ? "Equipo activo" : "Equipo inactivo"}
+            >
               <CircleIcon
                 sx={{
                   fontSize: "10px",

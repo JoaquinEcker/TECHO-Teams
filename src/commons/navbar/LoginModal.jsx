@@ -24,7 +24,6 @@ const Fade = React.forwardRef(function Fade(props, ref) {
     onRest: () => !open && onExited && onExited(),
   });
 
-
   return (
     <animated.div ref={ref} style={style} {...other}>
       {children}
@@ -60,7 +59,6 @@ const errorAlert = (title = "Login fallido", text = "Intentalo nuevamente") => {
   });
 };
 
-
 const LoginModal = ({ open, handleClose }) => {
   const mail = CustomHook("");
   const password = CustomHook("");
@@ -69,22 +67,22 @@ const LoginModal = ({ open, handleClose }) => {
   const handleLoginClick = (e) => {
     e.preventDefault();
     return axios
-    .post("http://143.198.238.253:3001/api/usuarios/login", {
-      mail: mail.value,
-      password: password.value,
-    })
-    .then((res) => {
-      if (res.data.error)
-        errorAlert(
-          "Error de logueo",
-          "Recorda verificar tu email para ingresar"
-        );
-      else {
-        dispatch(setUsuario(res.data))
-      }
-    })
-    .then(() => handleClose())
-    .catch(() => errorAlert());
+      .post("http://localhost:3001/api/usuarios/login", {
+        mail: mail.value,
+        password: password.value,
+      })
+      .then((res) => {
+        if (res.data.error)
+          errorAlert(
+            "Error de logueo",
+            "Recorda verificar tu email para ingresar"
+          );
+        else {
+          dispatch(setUsuario(res.data));
+        }
+      })
+      .then(() => handleClose())
+      .catch(() => errorAlert());
   };
 
   return (
@@ -111,7 +109,6 @@ const LoginModal = ({ open, handleClose }) => {
           <hr />
           <br />
           <form onSubmit={handleLoginClick}>
-
             <Box id="formBox">
               <TextField
                 size="small"

@@ -7,18 +7,22 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import getToken from "../../../utils/getToken";
 
-export default function CardInfoEquipo({ equipo, cantMiembros, setCantMiembros }) {
+export default function CardInfoEquipo({
+  equipo,
+  cantMiembros,
+  setCantMiembros,
+}) {
   const [pais, setPais] = useState("");
   const [sedes, setSedes] = useState("-");
-  
+
   const [territorio, setTerritorio] = useState("-");
 
   useEffect(() => {
     const promesas = [
-      axios.get("http://143.198.238.253:3001/api/regiones/paises"),
-      axios.get("http://143.198.238.253:3001/api/sedes"),
-      axios.get(`http://143.198.238.253:3001/api/equipos/cantMiembros/${equipo.id}`),
-      axios.get("http://143.198.238.253:3001/api/comunidades", {
+      axios.get("http://localhost:3001/api/regiones/paises"),
+      axios.get("http://localhost:3001/api/sedes"),
+      axios.get(`http://localhost:3001/api/equipos/cantMiembros/${equipo.id}`),
+      axios.get("http://localhost:3001/api/comunidades", {
         headers: { authorization: getToken(), pais: equipo.paisId },
       }),
     ];
@@ -38,7 +42,13 @@ export default function CardInfoEquipo({ equipo, cantMiembros, setCantMiembros }
         );
       })
       .catch((err) => console.log({ err }));
-  }, [equipo.id, equipo.paisId, equipo.sedeId, equipo.territorioId, setCantMiembros]);
+  }, [
+    equipo.id,
+    equipo.paisId,
+    equipo.sedeId,
+    equipo.territorioId,
+    setCantMiembros,
+  ]);
 
   return (
     <Card sx={{ width: 500 }}>

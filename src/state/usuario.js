@@ -10,9 +10,9 @@ export const setUsuario = createAction("SET_USARIO");
 
 export const loginRequest = createAsyncThunk(
   "LOGIN",
-  ({ mail, password, errorAlert,successAlert}) => {
+  ({ mail, password, errorAlert, successAlert }) => {
     return axios
-      .post("http://143.198.238.253:3001/api/usuarios/login", {
+      .post("http://localhost:3001/api/usuarios/login", {
         mail,
         password,
       })
@@ -23,8 +23,8 @@ export const loginRequest = createAsyncThunk(
             "Recorda verificar tu email para ingresar"
           );
         else {
-         
-          return res.data;}
+          return res.data;
+        }
       })
       .catch(() => errorAlert());
   }
@@ -33,7 +33,7 @@ export const loginRequest = createAsyncThunk(
 export const logoutRequest = createAsyncThunk("LOGOUT", () => {
   return axios
     .post(
-      "http://143.198.238.253:3001/api/usuarios/logout",
+      "http://localhost:3001/api/usuarios/logout",
       {},
       {
         headers: {
@@ -50,7 +50,7 @@ const usuarioReducer = createReducer(
   {
     [setUsuario]: (state, action) => action.payload,
     [loginRequest.fulfilled]: (state, action) => action.payload,
-    [loginRequest.pending]: (state, action) =>  action.payload,
+    [loginRequest.pending]: (state, action) => action.payload,
     [logoutRequest.fulfilled]: (state, action) => action.payload,
   }
 );

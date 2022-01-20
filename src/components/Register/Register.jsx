@@ -16,7 +16,6 @@ import swal from "sweetalert";
 import { useTheme } from "@mui/material/styles";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const initialForm = {
   nombres: "",
   mail: "",
@@ -152,7 +151,7 @@ function Register() {
   const localidad = CustomHook("");
 
   //inputs
-  const [imagenPerfil, setImagenPerfil] = useState({})
+  const [imagenPerfil, setImagenPerfil] = useState({});
   const [recibirMails, setRecibirMails] = useState(0);
   const [intereses, setIntereses] = useState([]);
   const [genero, setGenero] = useState("Prefiero no decirlo");
@@ -168,17 +167,17 @@ function Register() {
   const handleMail = () => {
     setRecibirMails((prev) => (prev === 0 ? 1 : 0));
   };
-  
+
   useEffect(() => {
     axios
-      .get("http://143.198.238.253:3001/api/regiones/paises")
+      .get("http://localhost:3001/api/regiones/paises")
       .then((res) => setPaises(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
     axios
-      .get(`http://143.198.238.253:3001/api/regiones/paises/${pais.value}/provincias`)
+      .get(`http://localhost:3001/api/regiones/paises/${pais.value}/provincias`)
       .then((res) => setProvincias(res.data))
       .catch((err) => console.log(err));
   }, [pais.value]);
@@ -186,7 +185,7 @@ function Register() {
   useEffect(() => {
     axios
       .get(
-        `http://143.198.238.253:3001/api/regiones/paises/${pais.value}/provincias/${provincia.value}/localidades`
+        `http://localhost:3001/api/regiones/paises/${pais.value}/provincias/${provincia.value}/localidades`
       )
       .then((res) => setLocalidades(res.data))
       .catch((err) => console.log(err));
@@ -201,10 +200,10 @@ function Register() {
     setIntereses(value);
   };
 
-  const imageHandler = e => {
-    e.preventDefault()
-    setImagenPerfil(e.target.files[0])
-  }
+  const imageHandler = (e) => {
+    e.preventDefault();
+    setImagenPerfil(e.target.files[0]);
+  };
 
   const successAlert = () => {
     swal({
@@ -224,21 +223,21 @@ function Register() {
     });
   };
 
-  const data = new FormData()
-  for(let campo in form) {
-    data.append(`${campo}`, form[campo])
+  const data = new FormData();
+  for (let campo in form) {
+    data.append(`${campo}`, form[campo]);
   }
-  data.append("idPais", parseInt(pais.value))
-  data.append("idProvincia", provincia.value ? parseInt(provincia.value) : 0)
-  data.append("idLocalidad", localidad.value ? parseInt(localidad.value) : 0)
-  data.append("estudios", estudios.value)
-  data.append("intereses", JSON.stringify(intereses))
-  data.append("apellidoMaterno", apellidoMaterno.value)
-  data.append("acepta_marketing", recibirMails)
-  data.append("recibirMails", recibirMails)
-  data.append("telefono", "0")
-  data.append("sexo", genero)
-  data.append("idUnidadOrganizacional", 0)
+  data.append("idPais", parseInt(pais.value));
+  data.append("idProvincia", provincia.value ? parseInt(provincia.value) : 0);
+  data.append("idLocalidad", localidad.value ? parseInt(localidad.value) : 0);
+  data.append("estudios", estudios.value);
+  data.append("intereses", JSON.stringify(intereses));
+  data.append("apellidoMaterno", apellidoMaterno.value);
+  data.append("acepta_marketing", recibirMails);
+  data.append("recibirMails", recibirMails);
+  data.append("telefono", "0");
+  data.append("sexo", genero);
+  data.append("idUnidadOrganizacional", 0);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -249,9 +248,10 @@ function Register() {
     } else if (!intereses.length) {
       return errorAlert("Complete los campos obligatorios correctamente");
     } else {
-      if(imagenPerfil.name) data.append("fotoDePerfil", imagenPerfil, imagenPerfil.name)
+      if (imagenPerfil.name)
+        data.append("fotoDePerfil", imagenPerfil, imagenPerfil.name);
       axios
-        .post("http://143.198.238.253:3001/api/usuarios/registrar", data)
+        .post("http://localhost:3001/api/usuarios/registrar", data)
         .then((res) => res.data)
         .then(() => successAlert())
         .then(() => navigate("/"))
@@ -484,7 +484,7 @@ function Register() {
               onChange={handleChange}
               input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
               renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5}}>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                   {selected.map((value) => (
                     <Chip key={value} label={value} />
                   ))}
@@ -511,7 +511,7 @@ function Register() {
               type="file"
               name="fotoDePerfil"
               onChange={imageHandler}
-              style={{color: "#dc3545"}}
+              style={{ color: "#dc3545" }}
             />
           </label>
           <label htmlFor="selector" className="label">
